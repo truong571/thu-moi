@@ -21,8 +21,8 @@ body{font-family:'Cormorant Garamond',serif;display:flex;align-items:center;just
 #petals{position:absolute;inset:0;z-index:4;pointer-events:none;}
 
 /* glowing hearts in background */
-.bgheart{position:absolute;z-index:2;color:rgba(212,83,126,.14);pointer-events:none;animation:floatUp 14s linear infinite;}
-@keyframes floatUp{0%{transform:translateY(40px) scale(.6);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(-120px) scale(1.1);opacity:0}}
+.bgheart{position:absolute;z-index:2;color:rgba(212,83,126,.10);pointer-events:none;animation:floatUp linear infinite;}
+@keyframes floatUp{0%{transform:translateY(0) scale(.4);opacity:0}10%{opacity:.7}90%{opacity:.7}100%{transform:translateY(-110vh) scale(.9);opacity:0}}
 
 /* ---------- COVER ---------- */
 #cover{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -69,8 +69,8 @@ body{font-family:'Cormorant Garamond',serif;display:flex;align-items:center;just
 .guest{font-family:'Dancing Script',cursive;color:#FBEAF0;font-size:44px;font-weight:700;margin-bottom:26px;
   text-shadow:0 3px 22px rgba(237,147,177,.55),0 1px 8px rgba(26,6,16,.8);position:relative;z-index:6;}
 
-#message{font-family:'Cormorant Garamond',serif;color:#FBEAF0;font-style:italic;font-size:18px;line-height:1.55;
-  min-height:60px;max-width:310px;margin-bottom:32px;}
+#message{font-family:'Cormorant Garamond',serif;color:#FBEAF0;font-style:italic;font-size:16px;line-height:1.5;
+  min-height:46px;max-width:340px;margin-bottom:32px;white-space:nowrap;}
 #message .cursor{display:inline-block;width:2px;height:18px;background:#ED93B1;vertical-align:middle;
   margin-left:2px;animation:blink .8s step-end infinite;}
 
@@ -82,7 +82,8 @@ body{font-family:'Cormorant Garamond',serif;display:flex;align-items:center;just
 .vline{width:1px;background:rgba(212,83,126,.4);}
 
 .footer-note{font-family:'Cormorant Garamond',serif;color:#ED93B1;font-style:italic;font-size:15px;
-  margin-top:26px;max-width:290px;opacity:.92;line-height:1.45;}
+  margin-top:26px;margin-bottom:10px;max-width:300px;opacity:.95;line-height:1.45;position:relative;z-index:7;
+  text-shadow:0 1px 10px rgba(26,6,16,.9);}
 
 /* ---------- MUSIC BTN ---------- */
 #musicBtn{position:absolute;top:calc(18px + env(safe-area-inset-top));right:18px;z-index:9;width:44px;height:44px;border-radius:50%;
@@ -190,10 +191,11 @@ function p_loop(){px.clearRect(0,0,PW,PH);if(petalsOn)for(const p of petals){p.y
 p_loop();
 
 /* ---------- BACKGROUND FLOATING HEARTS ---------- */
-function bgHearts(){for(let i=0;i<6;i++){const h=document.createElement('div');h.className='bgheart';
-  h.style.left=(8+Math.random()*84)+'%';h.style.bottom='-40px';
-  const sz=20+Math.random()*34;h.style.animationDuration=(11+Math.random()*8)+'s';
-  h.style.animationDelay=(Math.random()*8)+'s';
+function bgHearts(){for(let i=0;i<5;i++){const h=document.createElement('div');h.className='bgheart';
+  h.style.left=(6+Math.random()*88)+'%';h.style.bottom='-30px';
+  const sz=14+Math.random()*16;const dur=13+Math.random()*7;
+  h.style.animationDuration=dur+'s';
+  h.style.animationDelay=(-Math.random()*dur)+'s';
   h.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
   app.appendChild(h);}}
 
@@ -268,15 +270,24 @@ function scheduleMusic(startTime){
   return 8*bar;
 }
 
-function startMusic(){
+function ensureCtx(){
   if(!actx){
     actx=new(window.AudioContext||window.webkitAudioContext)();
     master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
     reverb=makeReverb(actx);const rg=actx.createGain();rg.gain.value=.9;reverb.connect(rg);rg.connect(master);
   }
   if(actx.state==='suspended')actx.resume();
+}
+function unlockAudio(){
+  ensureCtx();
+  // xung câm cực ngắn để mở khóa âm thanh trên iOS Safari
+  try{const o=actx.createOscillator();const g=actx.createGain();g.gain.value=0.0001;
+    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+0.02);}catch(e){}
+}
+function startMusic(){
+  ensureCtx();
   master.gain.cancelScheduledValues(actx.currentTime);
-  master.gain.setValueAtTime(master.gain.value,actx.currentTime);
+  master.gain.setValueAtTime(Math.max(master.gain.value,0.0001),actx.currentTime);
   master.gain.linearRampToValueAtTime(.5,actx.currentTime+1.2);
   function cycle(){const dur=scheduleMusic(actx.currentTime+.05);
     loopTimer=setTimeout(cycle,(dur)*1000-200);}
@@ -318,6 +329,9 @@ function openCard(){
   if(document.fonts&&document.fonts.ready){document.fonts.ready.then(runReveal);setTimeout(runReveal,1500);}
   else runReveal();
 }
+cover.addEventListener('touchstart',unlockAudio,{passive:true});
+cover.addEventListener('pointerdown',unlockAudio);
+cover.addEventListener('mousedown',unlockAudio);
 cover.addEventListener('click',openCard);
 cover.addEventListener('touchend',function(e){e.preventDefault();openCard();},{passive:false});
 
