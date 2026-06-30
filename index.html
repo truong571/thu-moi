@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a0610">
+<title>Thiệp mời sinh nhật — Nguyên Trường ♡ Phương Tuyên</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+html,body{height:100%;overflow:hidden;background:#1a0610;}
+body{font-family:'Cormorant Garamond',serif;display:flex;align-items:center;justify-content:center;}
+
+#app{position:relative;width:100%;max-width:480px;height:100vh;height:100dvh;max-height:920px;margin:auto;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 28%,#5e1836 0%,#2c0b1c 55%,#1a0610 100%);}
+
+#starfield{position:absolute;inset:0;z-index:1;}
+#petals{position:absolute;inset:0;z-index:4;pointer-events:none;}
+
+/* glowing hearts in background */
+.bgheart{position:absolute;z-index:2;color:rgba(212,83,126,.14);pointer-events:none;animation:floatUp 14s linear infinite;}
+@keyframes floatUp{0%{transform:translateY(40px) scale(.6);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(-120px) scale(1.1);opacity:0}}
+
+/* ---------- COVER ---------- */
+#cover{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;transition:opacity 1s ease,transform 1s ease;padding:30px;}
+.cover-sub{font-family:'Montserrat',sans-serif;color:#F4C0D1;font-size:12px;letter-spacing:5px;
+  text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fadeUp 1s ease .3s forwards;}
+.cover-name{font-family:'Dancing Script',cursive;color:#FBEAF0;font-size:48px;font-weight:700;
+  margin-bottom:46px;text-shadow:0 4px 34px rgba(212,83,126,.65);opacity:0;animation:fadeUp 1s ease .6s forwards;}
+.envelope{position:relative;width:100px;height:100px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ED93B1,#D4537E 60%,#993556);
+  display:flex;align-items:center;justify-content:center;animation:pulse 2s infinite,fadeUp 1s ease .9s forwards;opacity:0;
+  box-shadow:0 10px 44px rgba(212,83,126,.55);}
+.envelope svg{width:48px;height:48px;animation:beat 1.3s ease infinite;}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.14)}30%{transform:scale(1)}45%{transform:scale(1.1)}}
+.cover-tap{font-family:'Montserrat',sans-serif;color:#ED93B1;font-size:13px;letter-spacing:2px;margin-top:28px;
+  opacity:0;animation:fadeUp 1s ease 1.2s forwards,blink 2.2s ease 2.4s infinite;}
+
+@keyframes pulse{0%{box-shadow:0 10px 44px rgba(212,83,126,.55),0 0 0 0 rgba(212,83,126,.5)}
+  70%{box-shadow:0 10px 44px rgba(212,83,126,.55),0 0 0 28px rgba(212,83,126,0)}
+  100%{box-shadow:0 10px 44px rgba(212,83,126,.55),0 0 0 0 rgba(212,83,126,0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+.envelope:active{transform:scale(.93);}
+
+/* ---------- CARD ---------- */
+#card{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:42px 28px;opacity:0;transform:scale(1.06);transition:opacity 1.3s ease,transform 1.3s ease;
+  pointer-events:none;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+
+.eyebrow{font-family:'Montserrat',sans-serif;color:#F4C0D1;font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;margin-bottom:12px;}
+.title-script{font-family:'Dancing Script',cursive;color:#ED93B1;font-size:32px;font-weight:600;margin-bottom:2px;}
+.bday-name{font-family:'Cormorant Garamond',serif;color:#FBEAF0;font-size:50px;font-weight:600;line-height:1.05;
+  margin-bottom:8px;text-shadow:0 4px 28px rgba(212,83,126,.55),0 1px 8px rgba(26,6,16,.8);letter-spacing:.5px;
+  white-space:nowrap;position:relative;z-index:6;}
+.bday-born{font-family:'Cormorant Garamond',serif;color:#ED93B1;font-style:italic;font-size:15px;margin-bottom:26px;}
+
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:26px;}
+.divider .line{width:64px;height:1px;background:linear-gradient(90deg,transparent,#D4537E);}
+.divider .line.r{background:linear-gradient(90deg,#D4537E,transparent);}
+.divider svg{width:17px;height:17px;color:#D4537E;}
+
+.invite-to{font-family:'Cormorant Garamond',serif;color:#F4C0D1;font-size:18px;margin-bottom:2px;}
+.guest{font-family:'Dancing Script',cursive;color:#FBEAF0;font-size:44px;font-weight:700;margin-bottom:26px;
+  text-shadow:0 3px 22px rgba(237,147,177,.55),0 1px 8px rgba(26,6,16,.8);position:relative;z-index:6;}
+
+#message{font-family:'Cormorant Garamond',serif;color:#FBEAF0;font-style:italic;font-size:18px;line-height:1.55;
+  min-height:60px;max-width:310px;margin-bottom:32px;}
+#message .cursor{display:inline-block;width:2px;height:18px;background:#ED93B1;vertical-align:middle;
+  margin-left:2px;animation:blink .8s step-end infinite;}
+
+.details{display:flex;gap:24px;align-items:stretch;margin-bottom:10px;}
+.detail{display:flex;flex-direction:column;align-items:center;min-width:80px;}
+.detail svg{width:25px;height:25px;color:#ED93B1;margin-bottom:8px;}
+.detail .big{font-family:'Cormorant Garamond',serif;color:#FBEAF0;font-size:22px;font-weight:600;}
+.detail .small{font-family:'Montserrat',sans-serif;color:#F4C0D1;font-size:11px;letter-spacing:1.5px;margin-top:3px;}
+.vline{width:1px;background:rgba(212,83,126,.4);}
+
+.footer-note{font-family:'Cormorant Garamond',serif;color:#ED93B1;font-style:italic;font-size:15px;
+  margin-top:26px;max-width:290px;opacity:.92;line-height:1.45;}
+
+/* ---------- MUSIC BTN ---------- */
+#musicBtn{position:absolute;top:calc(18px + env(safe-area-inset-top));right:18px;z-index:9;width:44px;height:44px;border-radius:50%;
+  background:rgba(251,234,240,.12);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid rgba(251,234,240,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  opacity:0;transition:opacity .6s ease,background .3s;}
+#musicBtn.show{opacity:1;}
+#musicBtn:active{background:rgba(251,234,240,.25);}
+#musicBtn svg{width:20px;height:20px;color:#FBEAF0;}
+.eq{display:flex;gap:2px;align-items:flex-end;height:16px;}
+.eq span{width:3px;background:#FBEAF0;border-radius:2px;animation:eq 1s ease infinite;}
+.eq span:nth-child(2){animation-delay:.25s}.eq span:nth-child(3){animation-delay:.5s}
+@keyframes eq{0%,100%{height:5px}50%{height:16px}}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .9s ease,transform .9s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="starfield"></canvas>
+  <canvas id="petals"></canvas>
+
+  <div id="musicBtn" aria-label="Bật tắt nhạc">
+    <div class="eq" id="eqIcon" style="display:none;"><span></span><span></span><span></span></div>
+    <svg id="muteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+  </div>
+
+  <div id="cover">
+    <div class="cover-sub">Dành riêng cho</div>
+    <div class="cover-name">Phương Tuyên</div>
+    <div class="envelope" id="envelope">
+      <svg viewBox="0 0 24 24" fill="#FBEAF0"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <div class="cover-tap">Chạm để mở thiệp ♡</div>
+  </div>
+
+  <div id="card">
+    <div class="eyebrow reveal" data-d="0">Trân trọng mời đến</div>
+    <div class="title-script reveal" data-d="1">Sinh nhật của</div>
+    <div class="bday-name reveal" data-d="2">Nguyên Trường</div>
+    <div class="bday-born reveal" data-d="3">sinh ngày 05 · 07 · 2001</div>
+
+    <div class="divider reveal" data-d="4">
+      <span class="line"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span class="line r"></span>
+    </div>
+
+    <div class="invite-to reveal" data-d="5">Thân mời em</div>
+    <div class="guest reveal" data-d="6">Phương Tuyên</div>
+
+    <div id="message" class="reveal" data-d="7"></div>
+
+    <div class="details reveal" data-d="8">
+      <div class="detail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="big">17:30</div>
+        <div class="small">THỨ BẢY</div>
+      </div>
+      <div class="vline"></div>
+      <div class="detail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div class="big">04 · 07</div>
+        <div class="small">NĂM 2026</div>
+      </div>
+    </div>
+
+    <div class="footer-note reveal" data-d="9">Có em đến, ngày sinh nhật của anh sẽ đáng nhớ ♡</div>
+  </div>
+</div>
+
+<script>
+const app=document.getElementById('app');
+
+/* ---------- STARFIELD ---------- */
+const sky=document.getElementById('starfield'),sx=sky.getContext('2d');
+let SW,SH,stars=[],DPR=Math.min(window.devicePixelRatio||1,2);
+function sizeSky(){const w=app.clientWidth,h=app.clientHeight;SW=w;SH=h;
+  sky.width=w*DPR;sky.height=h*DPR;sky.style.width=w+'px';sky.style.height=h+'px';sx.setTransform(DPR,0,0,DPR,0,0);
+  stars=[];const n=Math.floor(w*h/9000);
+  for(let i=0;i<n;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,
+    a:Math.random()*7,sp:Math.random()*.02+.005});}
+sizeSky();window.addEventListener('resize',sizeSky);
+function sky_loop(){sx.clearRect(0,0,SW,SH);for(const s of stars){s.a+=s.sp;
+  const o=.3+Math.abs(Math.sin(s.a))*.7;sx.beginPath();sx.arc(s.x,s.y,s.r,0,7);
+  sx.fillStyle='rgba(255,220,235,'+o+')';sx.fill();}requestAnimationFrame(sky_loop);}
+sky_loop();
+
+/* ---------- PETALS ---------- */
+const pc=document.getElementById('petals'),px=pc.getContext('2d');
+let PW,PH,petals=[],petalsOn=false;
+function sizeP(){const w=app.clientWidth,h=app.clientHeight;PW=w;PH=h;
+  pc.width=w*DPR;pc.height=h*DPR;pc.style.width=w+'px';pc.style.height=h+'px';px.setTransform(DPR,0,0,DPR,0,0);}
+sizeP();window.addEventListener('resize',sizeP);
+function spawnP(){for(let i=0;i<28;i++)petals.push({x:Math.random()*PW,y:Math.random()*-PH,
+  r:6+Math.random()*7,s:.5+Math.random()*1.2,sway:Math.random()*7,sp:.01+Math.random()*.02,
+  rot:Math.random()*7,vr:(Math.random()-.5)*.04,col:Math.random()>.5?'#ED93B1':'#D4537E'});petalsOn=true;}
+function drawPetal(p){px.save();px.translate(p.x,p.y);px.rotate(p.rot);px.fillStyle=p.col;px.globalAlpha=.85;
+  px.beginPath();px.moveTo(0,0);px.bezierCurveTo(p.r*.6,-p.r*.6,p.r*.6,-p.r*1.7,0,-p.r*2);
+  px.bezierCurveTo(-p.r*.6,-p.r*1.7,-p.r*.6,-p.r*.6,0,0);px.fill();px.restore();}
+function p_loop(){px.clearRect(0,0,PW,PH);if(petalsOn)for(const p of petals){p.y+=p.s;p.sway+=p.sp;
+  p.x+=Math.sin(p.sway)*.8;p.rot+=p.vr;if(p.y>PH+25){p.y=-25;p.x=Math.random()*PW;}drawPetal(p);}
+  requestAnimationFrame(p_loop);}
+p_loop();
+
+/* ---------- BACKGROUND FLOATING HEARTS ---------- */
+function bgHearts(){for(let i=0;i<6;i++){const h=document.createElement('div');h.className='bgheart';
+  h.style.left=(8+Math.random()*84)+'%';h.style.bottom='-40px';
+  const sz=20+Math.random()*34;h.style.animationDuration=(11+Math.random()*8)+'s';
+  h.style.animationDelay=(Math.random()*8)+'s';
+  h.innerHTML='<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  app.appendChild(h);}}
+
+/* ---------- PIANO MUSIC (Web Audio, không cần file ngoài) ---------- */
+let actx=null,master=null,reverb=null,musicOn=false,loopTimer=null,startedAudio=false;
+const muteIcon=document.getElementById('muteIcon'),eqIcon=document.getElementById('eqIcon');
+
+function makeReverb(ctx){
+  const len=ctx.sampleRate*2.4,buf=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
+  const c=ctx.createConvolver();c.buffer=buf;return c;
+}
+
+// piano note: 3 detuned partials + soft attack/long decay -> warm felt-piano tone
+function piano(freq,time,dur,vel){
+  if(!actx)return;
+  const t=time;
+  const partials=[{m:1,g:1},{m:2,g:.32},{m:3,g:.12}];
+  const voice=actx.createGain();
+  voice.gain.setValueAtTime(0,t);
+  voice.gain.linearRampToValueAtTime(vel,t+.012);
+  voice.gain.exponentialRampToValueAtTime(vel*.5,t+.25);
+  voice.gain.exponentialRampToValueAtTime(.0008,t+dur);
+  partials.forEach(p=>{
+    const o=actx.createOscillator();const g=actx.createGain();
+    o.type='triangle';o.frequency.value=freq*p.m;
+    o.detune.value=(Math.random()*6-3);
+    g.gain.value=p.g;o.connect(g);g.connect(voice);
+    o.start(t);o.stop(t+dur+.1);
+  });
+  const dry=actx.createGain();dry.gain.value=.78;voice.connect(dry);dry.connect(master);
+  const wet=actx.createGain();wet.gain.value=.5;voice.connect(wet);wet.connect(reverb);
+}
+
+const N={C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196.00,A3:220.00,B3:246.94,
+  C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.00,A4:440.00,B4:493.88,
+  C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880.00};
+
+// A gentle, original romantic progression (8 bars, loops). Not any copyrighted song.
+function scheduleMusic(startTime){
+  const bpm=68, beat=60/bpm, bar=beat*4;
+  // chords (left hand, root+fifth+octave) per bar
+  const chords=[
+    [N.C3,N.G3,N.C4],   // C
+    [N.A3-110,N.E3,N.A3],// Am-ish (A2 root)
+    [N.F3,N.C4,N.F4],   // F
+    [N.G3,N.D4,N.G4],   // G
+    [N.C3,N.G3,N.C4],   // C
+    [N.A3-110,N.E3,N.A3],// Am
+    [N.F3,N.C4,N.F4],   // F
+    [N.G3,N.D4,N.G4]    // G
+  ];
+  // melody (right hand) — one phrase per bar, notes [freq, beatOffset, dur(beats)]
+  const mel=[
+    [[N.E5,0,1.5],[N.G5,1.5,1.5],[N.E5,3,1]],
+    [[N.C5,0,1],[N.E5,1,1],[N.A4,2,2]],
+    [[N.F5,0,1.5],[N.A5,1.5,1.5],[N.F5,3,1]],
+    [[N.G5,0,1],[N.D5,1,1],[N.B4,2,2]],
+    [[N.E5,0,1.5],[N.C5,1.5,1.5],[N.G4,3,1]],
+    [[N.A4,0,1],[N.C5,1,1],[N.E5,2,2]],
+    [[N.F5,0,1],[N.E5,1,1],[N.C5,2,1],[N.A4,3,1]],
+    [[N.G4,0,2],[N.C5,2,2]]
+  ];
+  for(let b=0;b<8;b++){
+    const bt=startTime+b*bar;
+    chords[b].forEach((f,i)=>piano(f,bt+i*.04,bar*.95,.18));
+    // soft arpeggio on beat 3
+    chords[b].forEach((f,i)=>piano(f*2,bt+2*beat+i*.12,beat*1.4,.07));
+    mel[b].forEach(n=>piano(n[0],bt+n[1]*beat,n[2]*beat*.96,.26));
+  }
+  return 8*bar;
+}
+
+function startMusic(){
+  if(!actx){
+    actx=new(window.AudioContext||window.webkitAudioContext)();
+    master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
+    reverb=makeReverb(actx);const rg=actx.createGain();rg.gain.value=.9;reverb.connect(rg);rg.connect(master);
+  }
+  if(actx.state==='suspended')actx.resume();
+  master.gain.cancelScheduledValues(actx.currentTime);
+  master.gain.setValueAtTime(master.gain.value,actx.currentTime);
+  master.gain.linearRampToValueAtTime(.5,actx.currentTime+1.2);
+  function cycle(){const dur=scheduleMusic(actx.currentTime+.05);
+    loopTimer=setTimeout(cycle,(dur)*1000-200);}
+  cycle();
+  musicOn=true;eqIcon.style.display='flex';muteIcon.style.display='none';
+}
+function stopMusic(){
+  if(loopTimer){clearTimeout(loopTimer);loopTimer=null;}
+  if(actx&&master){master.gain.cancelScheduledValues(actx.currentTime);
+    master.gain.setValueAtTime(master.gain.value,actx.currentTime);
+    master.gain.linearRampToValueAtTime(0,actx.currentTime+.4);}
+  musicOn=false;eqIcon.style.display='none';muteIcon.style.display='block';
+}
+document.getElementById('musicBtn').addEventListener('click',e=>{
+  e.stopPropagation();
+  if(musicOn)stopMusic();else startMusic();
+});
+
+/* ---------- OPEN SEQUENCE ---------- */
+const cover=document.getElementById('cover'),card=document.getElementById('card');
+let opened=false;
+function openCard(){
+  if(opened)return;opened=true;
+  cover.style.opacity='0';cover.style.transform='scale(1.1)';
+  setTimeout(()=>cover.style.display='none',1000);
+  card.style.opacity='1';card.style.transform='scale(1)';card.style.pointerEvents='auto';
+  document.getElementById('musicBtn').classList.add('show');
+  spawnP();bgHearts();
+  startMusic();
+  let revealed=false;
+  const runReveal=()=>{
+    if(revealed)return;revealed=true;
+    document.querySelectorAll('.reveal').forEach(el=>{
+      const d=parseInt(el.dataset.d)*180+400;
+      setTimeout(()=>el.classList.add('in'),d);
+    });
+    setTimeout(typeMessage,400+8*180+300);
+  };
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(runReveal);setTimeout(runReveal,1500);}
+  else runReveal();
+}
+cover.addEventListener('click',openCard);
+cover.addEventListener('touchend',function(e){e.preventDefault();openCard();},{passive:false});
+
+/* ---------- TYPEWRITER ---------- */
+function typeMessage(){
+  const msg='Sinh nhật anh sẽ vui hơn nhiều, nếu có em ở bên.';
+  const el=document.getElementById('message');let k=0;
+  el.innerHTML='<span class="txt"></span><span class="cursor"></span>';
+  const txt=el.querySelector('.txt');
+  const t=setInterval(()=>{txt.textContent=msg.slice(0,k);k++;
+    if(k>msg.length){clearInterval(t);setTimeout(()=>{const c=el.querySelector('.cursor');if(c)c.style.display='none';},1200);}
+  },52);
+}
+</script>
+</body>
+</html>
